@@ -10,6 +10,7 @@
 <body>
   <div id="op"> </div>
 
+  <div id="reading"> </div>
 
   <script>
 
@@ -38,7 +39,15 @@
             }
 
           });
-          accelerometer.addEventListener('reading', () => reloadOnShake(accelerometer));
+          accelerometer.addEventListener('reading', () => {
+            console.log("reading started");
+            document.querySelector("#op").textContent = "reading started"
+            console.log("Acceleration along the X-axis " + accelerometer.x);
+            console.log("Acceleration along the Y-axis " + accelerometer.y);
+            console.log("Acceleration along the Z-axis " + accelerometer.z);
+            document.querySelector("#reading").textContent = accelerometer.x
+            reloadOnShake(accelerometer)
+          });
           accelerometer.start();
         })
     } catch (error) {
