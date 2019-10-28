@@ -1,40 +1,66 @@
-<script>
+<html lang="en">
 
-  let accelerometer = null;
-  try {
-    navigator.permissions.query({ name: 'accelerometer' })
-      .then(result => {
-        if (result.state === 'denied') {
-          console.log('Permission to use accelerometer sensor is denied.');
-          return;
-        }
-        // Use the sensor.
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
 
-        accelerometer = new Accelerometer({ referenceFrame: 'device' });
-        accelerometer.addEventListener('error', event => {
-          // Handle runtime errors.
-          if (event.error.name === 'NotAllowedError') {
-            // Branch to code for requesting permission.
-          } else if (event.error.name === 'NotReadableError') {
-            console.log('Cannot connect to the sensor.');
+<body>
+  <div id="op"> </div>
+
+
+  <script>
+
+    let accelerometer = null;
+    try {
+      navigator.permissions.query({ name: 'accelerometer' })
+        .then(result => {
+          if (result.state === 'denied') {
+            document.querySelector("#op").textContent = "Permission to use accelerometer sensor is denied."
+            console.log('Permission to use accelerometer sensor is denied.');
+            return;
           }
-        });
-        accelerometer.addEventListener('reading', () => reloadOnShake(accelerometer));
-        accelerometer.start();
-      })
-      } catch (error) {
-        // Handle construction errors.
-        if (error.name === 'SecurityError') {
-          // See the note above about feature policy.
-          console.log('Sensor construction was blocked by a feature policy.');
-        } else if (error.name === 'ReferenceError') {
-          console.log('Sensor is not supported by the User Agent.');
-        } else {
-          throw error;
-        }
+          // Use the sensor.
+
+          accelerometer = new Accelerometer({ referenceFrame: 'device' });
+          accelerometer.addEventListener('error', event => {
+            // Handle runtime errors.
+            if (event.error.name === 'NotAllowedError') {
+              document.querySelector("#op").textContent = "To request permssion."
+
+              // Branch to code for requesting permission.
+            } else if (event.error.name === 'NotReadableError') {
+              document.querySelector("#op").textContent = "Cannot connect to the sensor."
+
+              console.log('Cannot connect to the sensor.');
+            }
+
+          });
+          accelerometer.addEventListener('reading', () => reloadOnShake(accelerometer));
+          accelerometer.start();
+        })
+    } catch (error) {
+      // Handle construction errors.
+      if (error.name === 'SecurityError') {
+        // See the note above about feature policy.
+        document.querySelector("#op").textContent = "Sensor construction was blocked by a feature policy."
+
+        console.log('Sensor construction was blocked by a feature policy.');
+      } else if (error.name === 'ReferenceError') {
+        document.querySelector("#op").textContent = "Sensor is not supported by the User Agent."
+
+        console.log('Sensor is not supported by the User Agent.');
+      } else {
+        document.querySelector("#op").textContent = error
+
+        throw error;
       }
- 
+    }
 
+  </script>
 
+</body>
 
-</script>
+</html>
